@@ -40,7 +40,7 @@ export default async function UsersPage() {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => {
+              {users.map((u: any) => {
                 const isBanned = !!u.bans;
                 const isMuted = !!u.mutes;
                 
@@ -66,7 +66,7 @@ export default async function UsersPage() {
                     <td style={{ opacity: 0.6 }}>{u.settings?.preferred_language || 'TR'} / {u.settings?.timezone || 'TR'}</td>
                     <td style={{ opacity: 0.6 }}>{u.last_active?.toLocaleString() || '-'}</td>
                     <td>
-                        <div className="flex-row">
+                        <div className="action-row">
                           <form action={toggleBan.bind(null, u.user_id, isBanned)}>
                             <button className={isBanned ? 'btn-primary' : 'btn-outline'}>
                               {isBanned ? <ShieldCheck size={16} /> : <Ban size={16} />}
@@ -83,21 +83,7 @@ export default async function UsersPage() {
         </div>
       </div>
 
-      <style jsx>{`
-        .user-info { display: flex; align-items: center; gap: 0.75rem; }
-        .user-avatar { 
-            width: 32px; height: 32px; 
-            border-radius: 50%; 
-            background: var(--accent-muted); 
-            color: var(--accent); 
-            display: grid; place-items: center; 
-            font-weight: 800; font-size: 0.8rem;
-        }
-        .user-name { font-weight: 700; font-size: 0.95rem; }
-        .user-date { font-size: 0.7rem; opacity: 0.5; }
-        .flex-row { display: flex; gap: 0.5rem; }
-        code { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: #3b82f6; }
-      `}</style>
     </div>
   );
 }
+

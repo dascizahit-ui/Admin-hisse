@@ -70,7 +70,7 @@ export default async function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {recentSignals.map((s) => (
+                {recentSignals.map((s: any) => (
                   <tr key={s.id}>
                     <td style={{ fontWeight: 700 }}>{s.symbol}</td>
                     <td>
@@ -114,34 +114,7 @@ export default async function Dashboard() {
         </div>
       </div>
       
-      <style jsx>{`
-        .header-gradient {
-            background: linear-gradient(to right, #fff, #9ca3af);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .flex-row { display: flex; align-items: center; gap: 1.5rem; }
-        .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.4); }
-        .stat-value { font-size: 1.75rem; font-weight: 700; margin-top: 2px; }
-        .icon-blue { color: #3b82f6; }
-        .icon-green { color: #10b981; }
-        .icon-red { color: #ef4444; }
-        .icon-yellow { color: #f59e0b; }
-        .icon-purple { color: #8b5cf6; }
-        .card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-        .card-header h2 { font-size: 1.1rem; font-weight: 600; }
-        .card-container.two-columns {
-           display: grid;
-           grid-template-columns: 1.8fr 1fr;
-           gap: 1.5rem;
-        }
-        .system-item { display: flex; justify-content: space-between; align-items: center; }
-        .system-label { font-size: 0.9rem; opacity: 0.7; }
-        .system-status { font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
-        .online { color: #10b981; background: rgba(16,185,129,0.1); }
-        .fast { color: #3b82f6; background: rgba(59,130,246,0.1); }
-        .neutral { color: #9ca3af; background: rgba(156,163,175,0.1); }
-      `}</style>
     </div>
   );
 }
+
