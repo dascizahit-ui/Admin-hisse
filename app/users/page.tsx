@@ -2,6 +2,8 @@ import prisma from '@/lib/prisma';
 import { User, ShieldAlert, ShieldCheck, Mail, Activity, Ban, MessageSquareOff } from 'lucide-react';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+
 export default async function UsersPage() {
   const users = await prisma.user.findMany({
     include: {

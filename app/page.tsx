@@ -1,6 +1,8 @@
 import prisma from '@/lib/prisma';
 import { Users, TrendingUp, AlertTriangle, ShieldCheck, Clock, Activity, BarChart3, PieChart } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Dashboard() {
   // Fetch some stats from Postgres
   const userCount = await prisma.user.count();
