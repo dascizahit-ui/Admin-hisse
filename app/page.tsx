@@ -1,28 +1,41 @@
-import prisma from '@/lib/prisma';
-import { Users, TrendingUp, AlertTriangle, ShieldCheck, Clock, Activity, BarChart3, PieChart } from 'lucide-react';
-
 export const dynamic = 'force-dynamic';
 
 export default async function Dashboard() {
-  // Fetch some stats from Postgres
-  const userCount = await prisma.user.count();
-  const banCount = await prisma.ban.count();
-  const signalCount = await prisma.hourlySignal.count();
-  const reportCount = await prisma.report.count({ where: { status: 'pending' } });
-  
-  // Recent signals
-  const recentSignals = await prisma.hourlySignal.findMany({
-    take: 5,
-    orderBy: { created_at: 'desc' }
-  });
+  let userCount = 0;
+  let banCount = 0;
+  let signalCount = 0;
+  let reportCount = 0;
+  let recentSignals: any[] = [];
+  let dbError = '';
+
+  try {
+    const prisma = (await import('@/lib/prisma')).default;
+    userCount = await prisma.user.count();
+    banCount = await prisma.ban.count();
+    signalCount = await prisma.hourlySignal.count();
+    reportCount = await prisma.report.count({ where: { status: 'pending' } });
+    recentSignals = await prisma.hourlySignal.findMany({
+      take: 5,
+      orderBy: { created_at: 'desc' }
+    });
+  } catch (e: any) {
+    dbError = e.message || 'Veritabanı bağlantı hatası';
+    console.error('Dashboard DB Error:', e);
+  }
 
   return (
     <div>
       <h1 className="header-gradient" style={{ fontSize: '2.5rem', marginBottom: '2rem', fontWeight: 800 }}>Dashboard</h1>
       
+      {dbError && (
+        <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid #ef4444', borderRadius: '12px', padding: '1rem', marginBottom: '2rem', color: '#ef4444' }}>
+          ⚠️ Veritabanı Hatası: {dbError}
+        </div>
+      )}
+
       <div className="stat-grid">
         <div className="card glass-panel flex-row">
-          <div><Users className="icon-blue" size={24} /></div>
+          <div><span className="icon-blue" style={{fontSize: '1.5rem'}}>👥</span></div>
           <div>
             <span className="stat-label">Toplam Kullanıcı</span>
             <div className="stat-value">{userCount}</div>
@@ -30,7 +43,7 @@ export default async function Dashboard() {
         </div>
         
         <div className="card glass-panel flex-row">
-          <div><TrendingUp className="icon-green" size={24} /></div>
+          <div><span className="icon-green" style={{fontSize: '1.5rem'}}>📊</span></div>
           <div>
             <span className="stat-label">Toplam Sinyal Analizi</span>
             <div className="stat-value">{signalCount}</div>
@@ -38,7 +51,7 @@ export default async function Dashboard() {
         </div>
 
         <div className="card glass-panel flex-row">
-          <div><ShieldCheck className="icon-red" size={24} /></div>
+          <div><span className="icon-red" style={{fontSize: '1.5rem'}}>🚫</span></div>
           <div>
             <span className="stat-label">Yasaklı Kullanıcı</span>
             <div className="stat-value">{banCount}</div>
@@ -46,7 +59,7 @@ export default async function Dashboard() {
         </div>
 
         <div className="card glass-panel flex-row">
-          <div><AlertTriangle className="icon-yellow" size={24} /></div>
+          <div><span className="icon-yellow" style={{fontSize: '1.5rem'}}>⚠️</span></div>
           <div>
             <span className="stat-label">Bekleyen Rapor</span>
             <div className="stat-value">{reportCount}</div>
@@ -57,7 +70,7 @@ export default async function Dashboard() {
       <div className="card-container two-columns">
         <div className="card glass-panel">
           <div className="card-header">
-            <Activity size={20} className="icon-blue" />
+            <span style={{fontSize: '1.2rem'}}>📈</span>
             <h2>Son Hisse Sinyalleri</h2>
           </div>
           <div className="table-container">
@@ -72,6 +85,9 @@ export default async function Dashboard() {
                 </tr>
               </thead>
               <tbody>
+                {recentSignals.length === 0 && (
+                  <tr><td colSpan={5} style={{opacity: 0.5, textAlign: 'center'}}>Henüz sinyal yok</td></tr>
+                )}
                 {recentSignals.map((s: any) => (
                   <tr key={s.id}>
                     <td style={{ fontWeight: 700 }}>{s.symbol}</td>
@@ -92,7 +108,7 @@ export default async function Dashboard() {
 
         <div className="card glass-panel">
           <div className="card-header">
-            <BarChart3 size={20} className="icon-purple" />
+            <span style={{fontSize: '1.2rem'}}>📊</span>
             <h2>Sistem Durumu</h2>
           </div>
           <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -101,22 +117,16 @@ export default async function Dashboard() {
                 <div className="system-status online">AKTİF</div>
              </div>
              <div className="system-item">
-                <div className="system-label">Veritabanı Gecikmesi</div>
-                <div className="system-status fast">14ms</div>
+                <div className="system-label">Veritabanı</div>
+                <div className={`system-status ${dbError ? 'neutral' : 'online'}`}>{dbError ? 'HATA' : 'BAĞLI'}</div>
              </div>
              <div className="system-item">
-                <div className="system-label">Yfinance API Erişimi</div>
-                <div className="system-status online">GÜVENLİ</div>
-             </div>
-             <div className="system-item">
-                <div className="system-label">Son Güncelleme</div>
-                <div className="system-status neutral">{new Date().toLocaleTimeString()}</div>
+                <div className="system-label">Toplam Kullanıcı</div>
+                <div className="system-status fast">{userCount}</div>
              </div>
           </div>
         </div>
       </div>
-      
     </div>
   );
 }
-

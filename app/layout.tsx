@@ -1,13 +1,12 @@
 import './globals.css';
-import { Inter, Outfit } from 'next/font/google';
+import { Outfit } from 'next/font/google';
 import Link from 'next/link';
-import { LayoutDashboard, Users, TrendingUp, AlertTriangle, Settings, ShieldAlert } from 'lucide-react';
 
 const outfit = Outfit({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Hisse Bot Admin | Premium Control',
-  description: 'Control center for the Stock Analysis Telegram Bot',
+  title: 'Hisse Bot Admin',
+  description: 'Telegram Hisse Bot Yönetim Paneli',
 };
 
 export default function RootLayout({
@@ -24,27 +23,12 @@ export default function RootLayout({
           </div>
           <nav>
             <Link href="/" className="nav-link">
-              <LayoutDashboard size={20} /> Dashboard
+              📊 Dashboard
             </Link>
             <Link href="/users" className="nav-link">
-              <Users size={20} /> Kullanıcılar
-            </Link>
-            <Link href="/signals" className="nav-link">
-              <TrendingUp size={20} /> Son Sinyaller
-            </Link>
-            <Link href="/reports" className="nav-link">
-              <AlertTriangle size={20} /> Raporlar
-            </Link>
-            <Link href="/bans" className="nav-link">
-              <ShieldAlert size={20} /> Yasaklılar
+              👥 Kullanıcılar
             </Link>
           </nav>
-          
-          <div style={{ position: 'absolute', bottom: '2rem', left: '1.5rem' }}>
-            <Link href="/settings" className="nav-link">
-              <Settings size={20} /> Ayarlar
-            </Link>
-          </div>
         </div>
         <main className="main-content">
           {children}
